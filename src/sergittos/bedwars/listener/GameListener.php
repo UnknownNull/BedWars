@@ -37,6 +37,7 @@ use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\item\ItemTypeIds;
 use pocketmine\item\MilkBucket;
@@ -68,6 +69,14 @@ use function property_exists;
 use function strtoupper;
 
 class GameListener implements Listener {
+
+    public function onItemHeld(PlayerItemHeldEvent $event): void {
+        $session = SessionFactory::getSession($event->getPlayer());
+        if(!$session->isPlaying()) {
+            return;
+        }
+        $event->cancel();
+    }
 
     public function onReceiveDamage(EntityDamageEvent $event): void {
         $entity = $event->getEntity();
